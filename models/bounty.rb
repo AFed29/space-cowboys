@@ -29,7 +29,7 @@ class Bounty
     "
     values = [@name, @danger_level, @last_known_location, @cashed_in]
     db.prepare("save", sql)
-    db.exec_prepared("save", values)
+    @id = db.exec_prepared("save", values)[0]['id'].to_i()
     db.close()
   end
 
