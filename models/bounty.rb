@@ -64,15 +64,15 @@ class Bounty
     db.close
   end
 
-  def find()
+  def Bounty.find_by_id(id)
     db = PG.connect({dbname: 'space_cowboys', host: 'localhost'})
 
     sql = "SELECT * FROM bounties WHERE id = $1;"
-    values = [@id]
-    db.prepare("find", sql)
-    bounty = db.exec_prepared("find", values)
+    values = [id]
+    db.prepare("find_by_id", sql)
+    bounties = db.exec_prepared("find_by_id", values)
     db.close
-    return bounty.map { |bounty| Bounty.new(bounty) }
+    return bounties.map { |bounty| Bounty.new(bounty) }.first()
   end
 
   def Bounty.all()
@@ -81,9 +81,10 @@ class Bounty
     sql = "SELECT * FROM bounties;"
     values = []
     db.prepare("all", sql)
-    bounties = db.exec_prepared("all", values)
+    bounties_hash = db.exec_prepared("all", values)
     db.close
-    return bounties.map { |bounty| Bounty.new(bounty) }
+    return bounties_hash.map { |bounty| Bounty.new(bounty) }
+
   end
 
   def Bounty.delete_all()
